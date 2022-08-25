@@ -1,6 +1,7 @@
-import { accountSteps } from './account';
-import { accessSteps } from './access';
+import { scansSteps } from './scans';
+// import { hostSteps } from './hosts';
+// import { vulnerabilitiesSteps } from './vulnerabilities';
 
-const integrationSteps = [...accountSteps, ...accessSteps];
+const integrationSteps = [...scansSteps];
 
 export { integrationSteps };

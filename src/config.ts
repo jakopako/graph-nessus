@@ -21,12 +21,18 @@ import { createAPIClient } from './client';
  * `instance.config` in a UI.
  */
 export const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
-  clientId: {
+  accessKey: {
     type: 'string',
   },
-  clientSecret: {
+  secretKey: {
     type: 'string',
     mask: true,
+  },
+  nessusHost: {
+    type: 'string',
+  },
+  disableTlsVerification: {
+    type: 'boolean',
   },
 };
 
@@ -36,14 +42,24 @@ export const instanceConfigFields: IntegrationInstanceConfigFieldMap = {
  */
 export interface IntegrationConfig extends IntegrationInstanceConfig {
   /**
-   * The provider API client ID used to authenticate requests.
+   * A user's access key for the nessus instance.
    */
-  clientId: string;
+  accessKey: string;
 
   /**
-   * The provider API client secret used to authenticate requests.
+   * A user's secret key for the nessus instance.
    */
-  clientSecret: string;
+  secretKey: string;
+
+  /**
+   * The hostname of the nessus instance.
+   */
+  nessusHost: string;
+
+  /**
+   * Whether to disable TLS verification.
+   */
+  disableTlsVerification: string;
 }
 
 export async function validateInvocation(
@@ -51,10 +67,13 @@ export async function validateInvocation(
 ) {
   const { config } = context.instance;
 
-  if (!config.clientId || !config.clientSecret) {
+  if (!config.accessKey || !config.secretKey || !config.nessusHost) {
     throw new IntegrationValidationError(
-      'Config requires all of {clientId, clientSecret}',
+      'Config requires all of {accessKey, secretKey, nessusHost}',
     );
+  }
+  if (config.disableTlsVerification) {
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
   }
 
   const apiClient = createAPIClient(config);

@@ -1,6 +1,6 @@
 {
-  "name": "@jupiterone/integration-template",
-  "version": "0.0.0",
+  "name": "@jakopako/graph-nessus",
+  "version": "0.0.1",
   "description": "A JupiterOne Integration",
   "license": "MPL-2.0",
   "main": "src/index.js",
@@ -38,6 +38,7 @@
     "@jupiterone/integration-sdk-core": "^8.22.0",
     "@jupiterone/integration-sdk-dev-tools": "^8.22.0",
     "@jupiterone/integration-sdk-testing": "^8.22.0",
+    "@types/node-fetch": "^2.6.2",
     "auto": "^10.36.5"
   },
   "auto": {
