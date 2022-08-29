@@ -1,11 +1,7 @@
 import {
   createIntegrationEntity,
-  createDirectRelationship,
   Entity,
-  RelationshipClass,
-  Relationship,
   parseTimePropertyValue,
-  isHost,
 } from '@jupiterone/integration-sdk-core';
 import * as crypto from 'crypto';
 // import util from 'util';

@@ -1,8 +1,6 @@
 import {
-  Entity,
   IntegrationStep,
   IntegrationStepExecutionContext,
-  IntegrationMissingKeyError,
   getRawData,
   createDirectRelationship,
   RelationshipClass,
@@ -32,6 +30,7 @@ export async function fetchScans({
 export async function fetchHosts({
   instance,
   jobState,
+  logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
 
@@ -39,6 +38,15 @@ export async function fetchHosts({
     { _type: Entities.SCAN._type },
     async (scanEntity) => {
       const scanRawData = getRawData<NessusScanDetails>(scanEntity);
+      if (!scanRawData) {
+        logger.warn(
+          {
+            _key: scanEntity._key,
+          },
+          'Could not get scan raw data from scan entity.',
+        );
+        return;
+      }
       await apiClient.iterateHosts(async (host) => {
         host.info.scan_id = scanRawData.info.object_id;
         const hostEntity = createHostEntity(host, scanRawData.info.object_id);
@@ -58,6 +66,7 @@ export async function fetchHosts({
 export async function fetchVulnerabilities({
   instance,
   jobState,
+  logger,
 }: IntegrationStepExecutionContext<IntegrationConfig>) {
   const apiClient = createAPIClient(instance.config);
 
@@ -65,6 +74,15 @@ export async function fetchVulnerabilities({
     { _type: Entities.HOST._type },
     async (hostEntity) => {
       const hostRawData = getRawData<NessusHostDetails>(hostEntity);
+      if (!hostRawData) {
+        logger.warn(
+          {
+            _key: hostEntity._key,
+          },
+          'Could not get host raw data from host entity.',
+        );
+        return;
+      }
       await apiClient.iterateVulnerabilities(async (vuln) => {
         const vulnEntity = createVulnEntity(
           vuln,

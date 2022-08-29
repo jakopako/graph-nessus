@@ -1,5 +1,5 @@
 import { IntegrationProviderAPIError } from '@jupiterone/integration-sdk-core';
-import fetch, { RequestInit, Response as NodeFetchResponse } from 'node-fetch';
+import fetch, { RequestInit } from 'node-fetch';
 import {
   NessusHostDetails,
   NessusScanDetails,
