@@ -1,7 +1,11 @@
 import { IntegrationProviderAuthenticationError } from '@jupiterone/integration-sdk-core';
 
 import { IntegrationConfig } from './config';
-import { NessusScanDetails } from './nessus/types';
+import {
+  NessusHostDetails,
+  NessusScanDetails,
+  NessusVulnerability,
+} from './nessus/types';
 import { NessusAPIClient } from './nessus/client';
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
@@ -51,10 +55,31 @@ export class APIClient {
       const scanInfo = await this.client.fetchScanDetails(scanId);
       await iteratee(scanInfo);
     }
+  }
 
-    // for (const user of users) {
-    //   await iteratee(user);
-    // }
+  public async iterateHosts(
+    iteratee: ResourceIteratee<NessusHostDetails>,
+    scanId: number,
+  ): Promise<void> {
+    const scanInfo = await this.client.fetchScanDetails(scanId);
+    for (const host of scanInfo.hosts) {
+      const hostInfo = await this.client.fetchHostDetails(scanId, host.host_id);
+      await iteratee(hostInfo);
+    }
+  }
+
+  public async iterateVulnerabilities(
+    iteratee: ResourceIteratee<NessusVulnerability>,
+    host: NessusHostDetails,
+  ): Promise<void> {
+    for (const vuln of host.vulnerabilities) {
+      const vulnInfo = await this.client.fetchVulnerabilityDetails(
+        host.info.scan_id,
+        vuln.host_id,
+        vuln.plugin_id,
+      );
+      await iteratee(vulnInfo);
+    }
   }
 
   /**

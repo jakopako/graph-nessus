@@ -95,9 +95,20 @@ https://github.com/JupiterOne/sdk/blob/main/docs/integrations/development.md
 
 The following entities are created:
 
-| Resources | Entity `_type` | Entity `_class` |
-| --------- | -------------- | --------------- |
-| Scan      | `nessus_scan`  | `Record`        |
+| Resources     | Entity `_type`                 | Entity `_class` |
+| ------------- | ------------------------------ | --------------- |
+| Host          | `nessus_scan_host`             | `Host`          |
+| Scan          | `nessus_scan`                  | `Record`        |
+| Vulnerability | `nessus_vulnerability_finding` | `Finding`       |
+
+### Relationships
+
+The following relationships are created:
+
+| Source Entity `_type` | Relationship `_class` | Target Entity `_type`          |
+| --------------------- | --------------------- | ------------------------------ |
+| `nessus_scan`         | **CONTAINS**          | `nessus_scan_host`             |
+| `nessus_scan_host`    | **HAS**               | `nessus_vulnerability_finding` |
 
 <!--
 ********************************************************************************

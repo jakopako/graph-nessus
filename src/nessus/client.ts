@@ -1,6 +1,11 @@
 import { IntegrationProviderAPIError } from '@jupiterone/integration-sdk-core';
 import fetch, { RequestInit, Response as NodeFetchResponse } from 'node-fetch';
-import { NessusScanDetails, NessusScansResponse } from './types';
+import {
+  NessusHostDetails,
+  NessusScanDetails,
+  NessusScansResponse,
+  NessusVulnerability,
+} from './types';
 import { ErrorBody, Method, UserPermissionsResponse } from './types';
 
 interface CreateNessusClientParams {
@@ -8,10 +13,6 @@ interface CreateNessusClientParams {
   secretKey: string;
   nessusHost: string;
 }
-
-// export interface NessusResponse<T> extends NodeFetchResponse {
-//     json(): Promise<T>;
-// }
 
 export class NessusAPIClient {
   private readonly nessusHost: string;
@@ -39,6 +40,24 @@ export class NessusAPIClient {
 
   public async fetchScanDetails(scanId: number) {
     return this.request<NessusScanDetails>(`/scans/${scanId}`, Method.GET);
+  }
+
+  public async fetchHostDetails(scanId: number, hostId: number) {
+    return this.request<NessusHostDetails>(
+      `/scans/${scanId}/hosts/${hostId}`,
+      Method.GET,
+    );
+  }
+
+  public async fetchVulnerabilityDetails(
+    scanId: number,
+    hostId: number,
+    vulnId: number,
+  ) {
+    return this.request<NessusVulnerability>(
+      `/scans/${scanId}/hosts/${hostId}/plugins/${vulnId}`,
+      Method.GET,
+    );
   }
 
   private async request<T>(url: string, method: Method, body?: {}): Promise<T> {
