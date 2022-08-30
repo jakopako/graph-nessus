@@ -35,7 +35,7 @@ export class APIClient {
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
-        endpoint: '',
+        endpoint: err.endpoint,
         status: err.status,
         statusText: `Failed to authenticate with the nessus API: ${err.statusText}`,
       });

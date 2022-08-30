@@ -28,12 +28,7 @@ describe('#validateInvocation', () => {
   /**
    * Testing a successful authorization can be done with recordings
    */
-  test.skip('successfully validates invocation', async () => {
-    recording = setupProjectRecording({
-      directory: __dirname,
-      name: 'validate-invocation',
-    });
-
+  test('successfully validates invocation', async () => {
     // Pass integrationConfig to authenticate with real credentials
     const executionContext = createMockExecutionContext({
       instanceConfig: integrationConfig,
@@ -53,54 +48,36 @@ describe('#validateInvocation', () => {
      * For each possible failure case, a test can be made to ensure that
      * error messaging is expected and clear to end-users
      */
-    describe('invalid user credentials', () => {
-      test.skip('should throw if clientId is invalid', async () => {
-        recording = setupProjectRecording({
-          directory: __dirname,
-          name: 'client-id-auth-error',
-          // Many authorization failures will return non-200 responses
-          // and `recordFailedRequest: true` is needed to capture these responses
-          options: {
-            recordFailedRequests: true,
-          },
-        });
-
+    describe('invalid credentials', () => {
+      test('should throw if accessKey is invalid', async () => {
         const executionContext = createMockExecutionContext({
           instanceConfig: {
             accessKey: 'INVALID',
             secretKey: integrationConfig.secretKey,
-            nessusHost: 'https://nessus.host/',
-            disableTlsVerification: false,
+            nessusHost: integrationConfig.nessusHost,
+            disableTlsVerification: true,
           },
         });
 
         // tests validate that invalid configurations throw an error
         // with an appropriate and expected message.
         await expect(validateInvocation(executionContext)).rejects.toThrow(
-          'Provider authentication failed at https://localhost/api/v1/some/endpoint?limit=1: 401 Unauthorized',
+          `Provider authentication failed at https://${executionContext.instance.config.nessusHost}/session: 401 Failed to authenticate with the nessus API: Invalid Credentials`,
         );
       });
 
-      test.skip('should throw if clientSecret is invalid', async () => {
-        recording = setupProjectRecording({
-          directory: __dirname,
-          name: 'client-secret-auth-error',
-          options: {
-            recordFailedRequests: true,
-          },
-        });
-
+      test('should throw if secretKey is invalid', async () => {
         const executionContext = createMockExecutionContext({
           instanceConfig: {
             accessKey: integrationConfig.accessKey,
             secretKey: 'INVALID',
-            nessusHost: 'https://nessus.host/',
-            disableTlsVerification: false,
+            nessusHost: integrationConfig.nessusHost,
+            disableTlsVerification: true,
           },
         });
 
         await expect(validateInvocation(executionContext)).rejects.toThrow(
-          'Provider authentication failed at https://localhost/api/v1/some/endpoint?limit=1: 401 Unauthorized',
+          `Provider authentication failed at https://${executionContext.instance.config.nessusHost}/session: 401 Failed to authenticate with the nessus API: Invalid Credentials`,
         );
       });
     });
