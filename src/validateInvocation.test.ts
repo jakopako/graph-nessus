@@ -3,7 +3,6 @@ import {
   Recording,
 } from '@jupiterone/integration-sdk-testing';
 import { integrationConfig } from '../test/config';
-import { setupProjectRecording } from '../test/recording';
 import { IntegrationConfig, validateInvocation } from './config';
 
 describe('#validateInvocation', () => {
