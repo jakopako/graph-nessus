@@ -21,7 +21,7 @@ describe('#validateInvocation', () => {
     });
 
     await expect(validateInvocation(executionContext)).rejects.toThrow(
-      'Config requires all of {clientId, clientSecret}',
+      'Config requires all of {accessKey, secretKey, nessusHost}',
     );
   });
 
@@ -67,8 +67,10 @@ describe('#validateInvocation', () => {
 
         const executionContext = createMockExecutionContext({
           instanceConfig: {
-            clientId: 'INVALID',
-            clientSecret: integrationConfig.clientSecret,
+            accessKey: 'INVALID',
+            secretKey: integrationConfig.secretKey,
+            nessusHost: 'https://nessus.host/',
+            disableTlsVerification: false,
           },
         });
 
@@ -90,8 +92,10 @@ describe('#validateInvocation', () => {
 
         const executionContext = createMockExecutionContext({
           instanceConfig: {
-            clientId: integrationConfig.clientSecret,
-            clientSecret: 'INVALID',
+            accessKey: integrationConfig.accessKey,
+            secretKey: 'INVALID',
+            nessusHost: 'https://nessus.host/',
+            disableTlsVerification: false,
           },
         });
 

@@ -59,7 +59,7 @@ export interface IntegrationConfig extends IntegrationInstanceConfig {
   /**
    * Whether to disable TLS verification.
    */
-  disableTlsVerification: string;
+  disableTlsVerification: boolean;
 }
 
 export async function validateInvocation(
