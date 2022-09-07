@@ -29,10 +29,6 @@ export function generateVulnEntityKey(
   scanId: number,
   hostId: number,
 ): string {
-  // console.log(vuln);
-  // console.log(util.inspect(vuln, false, null, true /* enable colors */));
-  // console.log(scanId);
-  // console.log(hostId);
   return `${Entities.HOST._type}_${crypto
     .createHash('md5')
     .update(
@@ -84,6 +80,10 @@ export function createHostEntity(
   host: NessusHostDetails,
   scanId: number,
 ): Entity {
+  const name = host.info['host-fqdn']
+    ? host.info['host-fqdn']
+    : host.info['host-ip'];
+  const hostname = name;
   return createIntegrationEntity({
     entityData: {
       source: host,
@@ -91,8 +91,8 @@ export function createHostEntity(
         _type: Entities.HOST._type,
         _class: Entities.HOST._class,
         _key: generateHostEntityKey(host, scanId),
-        name: host.info['host-fqdn'],
-        hostname: host.info['host-fqdn'],
+        name: name,
+        hostname: hostname,
         ipAddress: host.info['host-ip'],
         macAddress: host.info['mac-address'],
         operatingSystem: host.info['operating-system'],
