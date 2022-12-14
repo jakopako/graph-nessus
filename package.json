@@ -32,12 +32,12 @@
     "postversion": "cp package.json ./dist/package.json"
   },
   "peerDependencies": {
-    "@jupiterone/integration-sdk-core": "^8.22.0"
+    "@jupiterone/integration-sdk-core": "^8.29.3"
   },
   "devDependencies": {
-    "@jupiterone/integration-sdk-core": "^8.22.0",
-    "@jupiterone/integration-sdk-dev-tools": "^8.22.0",
-    "@jupiterone/integration-sdk-testing": "^8.22.0",
+    "@jupiterone/integration-sdk-core": "^8.29.3",
+    "@jupiterone/integration-sdk-dev-tools": "^8.29.3",
+    "@jupiterone/integration-sdk-testing": "^8.29.3",
     "@types/node-fetch": "^2.6.2",
     "auto": "^10.36.5"
   },
@@ -57,5 +57,8 @@
       "noChangelog": true,
       "prerelease": false
     }
+  },
+  "dependencies": {
+    "node-fetch": "2.6.7"
   }
 }
